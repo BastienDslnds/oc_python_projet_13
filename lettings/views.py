@@ -3,7 +3,7 @@ from .models import Letting
 
 
 # view function to get list of lettings
-def lettings_index(request):
+def index(request):
     lettings_list = Letting.objects.all()
     context = {'lettings_list': lettings_list}
     return render(request, 'lettings/index.html', context)

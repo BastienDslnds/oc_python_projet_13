@@ -3,7 +3,7 @@ from .models import Profile
 
 
 # view function to get a list of profiles
-def profiles_index(request):
+def index(request):
     profiles_list = Profile.objects.all()
     context = {'profiles_list': profiles_list}
     return render(request, 'profiles/index.html', context)
