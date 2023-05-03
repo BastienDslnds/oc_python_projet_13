@@ -1,0 +1,25 @@
+version: 2.1
+
+jobs:
+  build:
+    docker:
+      - image: django_lettings:8ae1d8a37777deb6f4264473894eca4144df4916
+    steps:
+      - checkout
+      - python/install-packages:
+          pkg-manager: pip
+      - run: python manage.py runserver
+  test:
+    docker:
+      - image: django_lettings:8ae1d8a37777deb6f4264473894eca4144df4916
+    steps:
+      - checkout
+      - run: pytest
+
+workflows:
+  build_and_test:
+    jobs:
+      - build
+      - test:
+          requires:
+            - build
