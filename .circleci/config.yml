@@ -9,7 +9,7 @@ jobs:
       - run:
           command: |
             python -m venv .venv
-            source .venv/bin/activate
+            source .venv/Scripts/activate
             pip install -r requirements.txt
   test:
     docker:
@@ -19,7 +19,7 @@ jobs:
       - run:
           command: |
             python -m venv .venv
-            source .venv/bin/activate
+            source .venv/Scripts/activate
             pytest
 
 workflows:
