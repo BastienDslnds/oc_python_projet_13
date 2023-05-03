@@ -6,15 +6,21 @@ jobs:
       - image: bdls/django_lettings:8ae1d8a37777deb6f4264473894eca4144df4916
     steps:
       - checkout
-      - python/install-packages:
-          pkg-manager: pip
-      - run: python manage.py runserver
+      - run:
+          command: |
+            python -m venv .venv
+            source .venv/bin/activate
+            pip install -r requirements.txt
   test:
     docker:
       - image: bdls/django_lettings:8ae1d8a37777deb6f4264473894eca4144df4916
     steps:
       - checkout
-      - run: pytest
+      - run:
+          command: |
+            python -m venv .venv
+            source .venv/bin/activate
+            pytest
 
 workflows:
   build_and_test:
