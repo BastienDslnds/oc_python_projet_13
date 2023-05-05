@@ -18,6 +18,9 @@ RUN pip install --no-cache-dir -r requirements.txt
 # On copie tout le contenu du répertoire courant dans /app
 COPY . /app
 
+# collect static files
+RUN python manage.py collectstatic --noinput
+
 EXPOSE 8000
 
 CMD ["python", "manage.py", "runserver", "0.0.0.0:8000"]
