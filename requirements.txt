@@ -1,12 +1,15 @@
 asgiref==3.6.0
 colorama==0.4.6
-Django==3.0
+dj-database-url==2.0.0
+Django==4.2.1
+django-heroku==0.3.1
 entrypoints==0.3
 flake8==3.7.0
 iniconfig==2.0.0
 mccabe==0.6.1
 packaging==23.1
 pluggy==1.0.0
+psycopg2==2.9.6
 pycodestyle==2.5.0
 pyflakes==2.1.1
 pytest==7.3.1
@@ -14,3 +17,6 @@ pytest-django==3.9.0
 pytz==2023.3
 six==1.16.0
 sqlparse==0.4.4
+typing_extensions==4.5.0
+tzdata==2023.3
+whitenoise==6.4.0
