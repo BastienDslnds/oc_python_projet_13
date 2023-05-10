@@ -1,1 +1,1 @@
-web: python manage.py runserver
+web: gunicorn oc_lettings_site.wsgi

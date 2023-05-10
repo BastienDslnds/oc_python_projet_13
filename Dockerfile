@@ -6,6 +6,7 @@ FROM python:3.11 as python
 ENV PYTHONUNBUFFERED 1
 # On désire pas que python crée des fichiers *.pyc
 ENV PYTHONDONTWRITEBYTECODE 1
+ENV PORT=8000
 
 # Définition du répertoire de travail
 WORKDIR /app
@@ -21,6 +22,4 @@ COPY . /app
 # collect static files
 RUN python manage.py collectstatic --noinput
 
-EXPOSE 8000
-
-CMD ["python", "manage.py", "runserver", "0.0.0.0:8000"]
+CMD python manage.py runserver 0.0.0.0:$PORT
