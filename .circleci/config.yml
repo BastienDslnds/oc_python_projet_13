@@ -1,7 +1,7 @@
 version: 2.1
 
 jobs:
-  build:
+  build_test:
     docker:
       - image: python:3.11
     steps:
@@ -12,12 +12,6 @@ jobs:
             python -m venv .venv
             source .venv/bin/activate
             pip install -r requirements.txt
-
-  test:
-    docker:
-      - image: python:3.11
-    steps:
-      - checkout
       - run:
           name: Run tests
           command: |
@@ -63,13 +57,10 @@ jobs:
 workflows:
   build_test_deploy:
     jobs:
-      - build
-      - test:
-          requires:
-            - build
+      - build_test
       - containerize:
           requires:
-            - test
+            - build_test
       - deploy:
           requires:
             - containerize
