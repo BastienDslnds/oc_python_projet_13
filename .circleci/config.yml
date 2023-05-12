@@ -27,7 +27,7 @@ jobs:
           command: |
             docker build \
               --build-arg COMMIT_SHA=$(echo $CIRCLE_SHA1 | cut -c 1-7) \
-              -t oc_lettings:$CIRCLE_SHA1 .
+              -t oc_lettings:$CIRCLE_SHA1 $CIRCLE_WORKING_DIRECTORY
       - run:
           name: Run Docker image
           command: docker run -d -p 8000:8000 oc_lettings:$CIRCLE_SHA1
