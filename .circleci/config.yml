@@ -22,6 +22,7 @@ jobs:
     docker:
       - image: docker:latest
     steps:
+      - setup_remote_docker
       - checkout
       - run:
           name: Build Docker image
@@ -55,7 +56,6 @@ jobs:
 workflows:
   build_test_deploy:
     jobs:
-      - setup_remote_docker
       - build_test
       - containerize:
           requires:
