@@ -20,7 +20,7 @@ jobs:
 
   containerize:
     docker:
-      - image: docker:stable-git
+      - image: circleci/python:3.9
     steps:
       - checkout
       - run:
