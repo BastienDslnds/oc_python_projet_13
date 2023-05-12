@@ -20,7 +20,7 @@ jobs:
 
   containerize:
     docker:
-      - image: python:3.11
+      - image: docker:stable-git
     steps:
       - run:
           name: Build Docker image
