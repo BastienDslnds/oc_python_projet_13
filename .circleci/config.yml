@@ -42,8 +42,6 @@ jobs:
   deploy:
     docker:
         - image: cimg/deploy:2023.05.1-node
-          volumes:
-          - /var/run/docker.sock:/var/run/docker.sock
     environment:
       - HEROKU_APP_NAME: oc-python-projet-13
       - HEROKU_API_KEY: $HEROKU_API_KEY
@@ -53,6 +51,7 @@ jobs:
       - run:
           name: Deploy to Heroku
           command: |
+            /bin/sh -c "docker run --rm -v /var/run/docker.sock:/var/run/docker.sock"
             docker login --username $DOCKERHUB_USERNAME --password $DOCKERHUB_PASSWORD
             docker pull bdls/oc_lettings:$CIRCLE_SHA1
             heroku container:login --api-key $HEROKU_API_KEY
