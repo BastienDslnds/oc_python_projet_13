@@ -47,6 +47,7 @@ jobs:
       - HEROKU_API_KEY: $HEROKU_API_KEY
       - HEROKU_USERNAME: $HEROKU_USERNAME
     steps:
+      - checkout
       - run:
           name: Deploy to Heroku
           command: |
