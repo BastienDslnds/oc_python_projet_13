@@ -51,7 +51,7 @@ jobs:
       - run:
           name: Deploy to Heroku
           command: |
-            docker login --username "$DOCKERHUB_USERNAME" --password "$DOCKERHUB_PASSWORD"
+            docker login --username $DOCKERHUB_USERNAME --password $DOCKERHUB_PASSWORD
             docker pull bdls/oc_lettings:$CIRCLE_SHA1
             heroku container:login --api-key $HEROKU_API_KEY
             docker tag bdls/oc_lettings:$CIRCLE_SHA1 registry.heroku.com/$HEROKU_USERNAME/web
