@@ -50,10 +50,12 @@ jobs:
       - run:
           name: Deploy to Heroku
           command: |
-            docker login --username=$HEROKU_USERNAME --password=$HEROKU_API_KEY registry.heroku.com
-            docker tag oc_lettings:$CIRCLE_SHA1 registry.heroku.com/$HEROKU_APP_NAME/web
-            docker push registry.heroku.com/$HEROKU_APP_NAME/web
-            heroku container:release web --app $HEROKU_APP_NAME
+            docker login --username "$DOCKERHUB_USERNAME" --password "$DOCKERHUB_PASSWORD"
+            docker pull bdls/oc_lettings:$CIRCLE_SHA1
+            heroku container:login --api-key $HEROKU_API_KEY
+            docker tag bdls/oc_lettings:$CIRCLE_SHA1 registry.heroku.com/$HEROKU_USERNAME/web
+            docker push registry.heroku.com/$HEROKU_USERNAME/web
+            heroku container:release web --app $HEROKU_USERNAME
 
 workflows:
   build_test_deploy:
