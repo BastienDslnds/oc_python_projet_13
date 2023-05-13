@@ -41,7 +41,7 @@ jobs:
 
   deploy:
     docker:
-        - image: circleci/python:3.9
+        - image: cimg/deploy:2023.05.1-node
     environment:
       - HEROKU_APP_NAME: oc-python-projet-13
       - HEROKU_API_KEY: $HEROKU_API_KEY
