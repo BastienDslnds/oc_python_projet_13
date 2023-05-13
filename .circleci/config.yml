@@ -42,6 +42,8 @@ jobs:
   deploy:
     docker:
         - image: cimg/deploy:2023.05.1-node
+          volumes:
+          - /var/run/docker.sock:/var/run/docker.sock
     environment:
       - HEROKU_APP_NAME: oc-python-projet-13
       - HEROKU_API_KEY: $HEROKU_API_KEY
