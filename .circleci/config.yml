@@ -51,11 +51,8 @@ jobs:
           name: Install Heroku CLI
           command: |
             curl https://cli-assets.heroku.com/install.sh | sh
-            echo $HEROKU_API_KEY
-            echo $HEROKU_APP_NAME
-      - run: 
-          name: Login to Heroku
-          command: heroku login --email=_ --password=$HEROKU_API_KEY
+            heroku auth:token
+            echo "$HEROKU_API_KEY" | docker login --username=_ --password-stdin registry.heroku.com
       - run: 
           name: Push to Heroku
           command: heroku container:push web --app $HEROKU_APP_NAME
