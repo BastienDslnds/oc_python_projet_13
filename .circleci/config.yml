@@ -42,31 +42,13 @@ jobs:
   deploy:
     docker:
         - image: cimg/deploy:2023.05.1-node
+          command: /bin/sh -c "docker run --rm -v /var/run/docker.sock:/var/run/docker.sock -e HEROKU_APP_NAME=$HEROKU_APP_NAME -e HEROKU_API_KEY=$HEROKU_API_KEY -e HEROKU_USERNAME=$HEROKU_USERNAME -e DOCKERHUB_USERNAME=$DOCKERHUB_USERNAME -e DOCKERHUB_PASSWORD=$DOCKERHUB_PASSWORD bdls/oc_lettings:$CIRCLE_SHA1 /bin/sh -c 'docker login --username $DOCKERHUB_USERNAME --password $DOCKERHUB_PASSWORD && heroku container:login --api-key $HEROKU_API_KEY && docker tag bdls/oc_lettings:$CIRCLE_SHA1 registry.heroku.com/$HEROKU_APP_NAME/web && docker push registry.heroku.com/$HEROKU_APP_NAME/web && heroku container:release web --app $HEROKU_APP_NAME'"
     environment:
       - HEROKU_APP_NAME: oc-python-projet-13
       - HEROKU_API_KEY: $HEROKU_API_KEY
       - HEROKU_USERNAME: $HEROKU_USERNAME
     steps:
       - checkout
-      - run:
-          name: Deploy to Heroku
-          command: |
-            docker login --username $DOCKERHUB_USERNAME --password $DOCKERHUB_PASSWORD
-            echo "OK 1"
-            sudo chown root:docker /var/run/docker.sock
-            echo "OK docker"
-            sudo service docker start
-            echo "OK docker start"
-            docker image pull bdls/oc_lettings
-            echo "OK 2"
-            heroku container:login --api-key $HEROKU_API_KEY
-            echo "OK 3"
-            docker tag bdls/oc_lettings:$CIRCLE_SHA1 registry.heroku.com/$HEROKU_USERNAME/web
-            echo "OK 4"
-            docker push registry.heroku.com/$HEROKU_USERNAME/web
-            echo "OK 5"
-            heroku container:release web --app $HEROKU_USERNAME
-            echo "OK 6"
 
 workflows:
   build_test_deploy:
