@@ -55,7 +55,7 @@ jobs:
             echo $HEROKU_APP_NAME
       - run: 
           name: Login to Heroku
-          command: heroku container:login --api-key $HEROKU_API_KEY
+          command: heroku login --email=_ --password=$HEROKU_API_KEY
       - run: 
           name: Push to Heroku
           command: heroku container:push web --app $HEROKU_APP_NAME
