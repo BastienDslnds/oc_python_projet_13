@@ -53,6 +53,10 @@ jobs:
           command: |
             docker login --username $DOCKERHUB_USERNAME --password $DOCKERHUB_PASSWORD
             echo "OK 1"
+            sudo chown root:docker /var/run/docker.sock
+            echo "OK docker"
+            sudo service docker start
+            echo "OK docker start"
             docker image pull bdls/oc_lettings
             echo "OK 2"
             heroku container:login --api-key $HEROKU_API_KEY
