@@ -51,13 +51,18 @@ jobs:
       - run:
           name: Deploy to Heroku
           command: |
-            /bin/sh -c "docker run --rm -v /var/run/docker.sock:/var/run/docker.sock"
             docker login --username $DOCKERHUB_USERNAME --password $DOCKERHUB_PASSWORD
+            echo "OK 1"
             docker pull bdls/oc_lettings:$CIRCLE_SHA1
+            echo "OK 2"
             heroku container:login --api-key $HEROKU_API_KEY
+            echo "OK 3"
             docker tag bdls/oc_lettings:$CIRCLE_SHA1 registry.heroku.com/$HEROKU_USERNAME/web
+            echo "OK 4"
             docker push registry.heroku.com/$HEROKU_USERNAME/web
+            echo "OK 5"
             heroku container:release web --app $HEROKU_USERNAME
+            echo "OK 6"
 
 workflows:
   build_test_deploy:
