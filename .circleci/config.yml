@@ -39,7 +39,7 @@ jobs:
             docker tag oc_lettings:$CIRCLE_SHA1 $DOCKERHUB_USERNAME/oc_lettings:$CIRCLE_SHA1
             docker push $DOCKERHUB_USERNAME/oc_lettings:$CIRCLE_SHA1
 
-  heroku_deploy:
+  deploy:
     docker:
       - image: cimg/python:3.10
     environment:
