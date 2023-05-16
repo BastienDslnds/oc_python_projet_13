@@ -53,7 +53,7 @@ jobs:
           command: |
             docker login --username $DOCKERHUB_USERNAME --password $DOCKERHUB_PASSWORD
             echo "OK 1"
-            docker pull bdls/oc_lettings:3d2c246a74a90d3feb194303fd0492a93447ca17
+            docker image pull bdls/oc_lettings
             echo "OK 2"
             heroku container:login --api-key $HEROKU_API_KEY
             echo "OK 3"
