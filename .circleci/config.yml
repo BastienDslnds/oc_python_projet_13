@@ -39,16 +39,29 @@ jobs:
             docker tag oc_lettings:$CIRCLE_SHA1 $DOCKERHUB_USERNAME/oc_lettings:$CIRCLE_SHA1
             docker push $DOCKERHUB_USERNAME/oc_lettings:$CIRCLE_SHA1
 
-  deploy:
-    docker:
-        - image: cimg/deploy:2023.05.1-node
-          command: /bin/sh -c "docker run --rm -v /var/run/docker.sock:/var/run/docker.sock -e HEROKU_APP_NAME=$HEROKU_APP_NAME -e HEROKU_API_KEY=$HEROKU_API_KEY -e HEROKU_USERNAME=$HEROKU_USERNAME -e DOCKERHUB_USERNAME=$DOCKERHUB_USERNAME -e DOCKERHUB_PASSWORD=$DOCKERHUB_PASSWORD bdls/oc_lettings:$CIRCLE_SHA1 /bin/sh -c 'docker login --username $DOCKERHUB_USERNAME --password $DOCKERHUB_PASSWORD && heroku container:login --api-key $HEROKU_API_KEY && docker tag bdls/oc_lettings:$CIRCLE_SHA1 registry.heroku.com/$HEROKU_APP_NAME/web && docker push registry.heroku.com/$HEROKU_APP_NAME/web && heroku container:release web --app $HEROKU_APP_NAME'"
-    environment:
-      - HEROKU_APP_NAME: oc-python-projet-13
-      - HEROKU_API_KEY: $HEROKU_API_KEY
-      - HEROKU_USERNAME: $HEROKU_USERNAME
-    steps:
-      - checkout
+    heroku_deploy:
+      docker:
+        - image: cimg/python:3.10
+      environment:
+        - HEROKU_APP_NAME: oc-python-projet-13
+        - HEROKU_API_KEY: $HEROKU_API_KEY
+      steps:
+        - checkout
+        - run:
+            name: Install Heroku CLI
+            command: |
+              curl https://cli-assets.heroku.com/install.sh | sh
+              echo $HEROKU_API_KEY
+              echo $HEROKU_APP_NAME
+        - run: 
+            name: Login to Heroku
+            command: heroku container:login --api-key $HEROKU_API_KEY
+        - run: 
+            name: Push to Heroku
+            command: heroku container:push web --app $HEROKU_APP_NAME
+        - run: 
+            name: Release on Heroku
+            command: heroku container:release web --app $HEROKU_APP_NAME
 
 workflows:
   build_test_deploy:
