@@ -54,7 +54,7 @@ jobs:
       - setup_remote_docker
       - run: 
           name: Login to Heroku
-          command: docker login --username=_ --password=$(heroku auth:token) registry.heroku.com
+          command: docker login --username=_ --password=$HEROKU_API_KEY registry.heroku.com
       - run: 
           name: Push to Heroku
           command: heroku container:push web --app $HEROKU_APP_NAME
