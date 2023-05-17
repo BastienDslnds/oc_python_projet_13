@@ -59,7 +59,7 @@ jobs:
             echo "OK 1"
             docker image pull bdls/oc_lettings:$CIRCLE_SHA1
             echo "OK 2"
-            heroku container:login --api-key $HEROKU_API_KEY
+            heroku container:login
             echo "OK 3"
             docker tag bdls/oc_lettings:$CIRCLE_SHA1 registry.heroku.com/$HEROKU_USERNAME/web
             echo "OK 4"
