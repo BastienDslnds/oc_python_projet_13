@@ -50,23 +50,13 @@ jobs:
       - run:
           name: Install Heroku CLI
           command: |
-            curl https://cli-assets.heroku.com/install.sh | sh
-      - setup_remote_docker
-      - run: 
-          name: Deploy to Heroku
-          command: |
-            docker login --username $DOCKERHUB_USERNAME --password $DOCKERHUB_PASSWORD
-            echo "OK 1"
-            docker image pull bdls/oc_lettings:$CIRCLE_SHA1
-            echo "OK 2"
+            sudo curl https://cli-assets.heroku.com/install.sh | sh
             HEROKU_API_KEY=${HEROKU_API_KEY} heroku container:login
+            echo "OK 1"
+            HEROKU_API_KEY=${HEROKU_API_KEY} heroku container:push -a $HEROKU_APP_NAME web
+            echo "OK 2"
+            HEROKU_API_KEY=${HEROKU_API_KEY} heroku container:release -a $HEROKU_APP_NAME web
             echo "OK 3"
-            docker tag bdls/oc_lettings:$CIRCLE_SHA1 registry.heroku.com/$HEROKU_APP_NAME/web
-            echo "OK 4"
-            docker push registry.heroku.com/$HEROKU_APP_NAME/web
-            echo "OK 5"
-            heroku container:release web --app $HEROKU_APP_NAME
-            echo "OK 6"
 
 workflows:
   build_test_deploy:
