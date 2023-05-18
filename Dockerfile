@@ -6,7 +6,11 @@ FROM python:3.11 as python
 ENV PYTHONUNBUFFERED 1
 # On désire pas que python crée des fichiers *.pyc
 ENV PYTHONDONTWRITEBYTECODE 1
+# Définition du port
 ENV PORT=8000
+# Pour utiliser --build-arg SECRET_KEY
+ARG SECRET_KEY
+ENV SECRET_KEY=${SECRET_KEY}
 
 # Définition du répertoire de travail
 WORKDIR /app
