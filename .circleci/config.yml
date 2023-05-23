@@ -57,7 +57,7 @@ jobs:
           id: oc-python-projet-13
           command: |
             set -e
-            result=$(heroku apps:info --app your-app-name --json)
+            result=$(heroku apps:info --app oc-python-projet-13 --json)
             if [[ $result == *"\"id\""* ]]; then
               echo "::set-output name=app_exists::true"
             else
