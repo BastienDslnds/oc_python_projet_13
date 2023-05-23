@@ -57,8 +57,7 @@ jobs:
           id: oc-python-projet-13
           command: |
             set -e
-            result=$(heroku apps:info --app oc-python-projet-13 --json)
-            if [[ $result == *"\"id\""* ]]; then
+            if heroku apps:info --app oc-python-projet-13 >/dev/null 2>&1; then
               echo "::set-output name=app_exists::true"
             else
               echo "::set-output name=app_exists::false"
@@ -78,11 +77,17 @@ jobs:
           name: Deploy to Heroku
           command: |
             docker login --username $DOCKERHUB_USERNAME --password $DOCKERHUB_PASSWORD
+            echo "OK 1"
             docker image pull $DOCKERHUB_USERNAME/oc_lettings:$CIRCLE_SHA1
+            echo "OK 2"
             HEROKU_API_KEY=${HEROKU_API_KEY} heroku container:login
+            echo "OK 3"
             docker tag $DOCKERHUB_USERNAME/oc_lettings:$CIRCLE_SHA1 registry.heroku.com/$HEROKU_APP_NAME/web
+            echo "OK 4"
             docker push registry.heroku.com/$HEROKU_APP_NAME/web
+            echo "OK 5"
             heroku container:release web --app $HEROKU_APP_NAME
+            echo "OK 6"
 
 workflows:
   build_test_deploy:
