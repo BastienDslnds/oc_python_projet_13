@@ -66,10 +66,11 @@ jobs:
 
       - run: 
           name: Create Heroku app if it doesn't exist
-          if: steps.heroku_app_check.outputs.app_exists == 'false'
           command: |
             set -e
+            if [[steps.heroku_app_check.outputs.app_exists == 'false']]; then
             heroku create oc-python-projet-13
+            fi
 
       - run: 
           name: Deploy to Heroku
