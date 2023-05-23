@@ -69,7 +69,7 @@ jobs:
             docker login --username $DOCKERHUB_USERNAME --password $DOCKERHUB_PASSWORD
             docker image pull $DOCKERHUB_USERNAME/oc_lettings:$CIRCLE_SHA1
             HEROKU_API_KEY=${HEROKU_API_KEY} heroku container:login
-            if [[steps.heroku_app_check.outputs.app_exists == 'false']]; then
+            if [[ "${{steps.heroku_app_check.outputs.app_exists}}" == 'false']]; then
             HEROKU_API_KEY=${HEROKU_API_KEY} heroku container:login
             heroku create oc-python-projet-13
             fi
