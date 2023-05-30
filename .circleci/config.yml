@@ -69,6 +69,10 @@ jobs:
             HEROKU_API_KEY=${HEROKU_API_KEY} heroku container:login
             heroku apps:info -a oc-python-projet-13 || heroku create oc-python-projet-13
             
+      - run:
+          name: Define secret key for Heroku
+          command: |
+            heroku config:set SECRET_KEY=$SECRET_KEY --app oc-python-projet-13
 
       - run: 
           name: Deploy to Heroku
