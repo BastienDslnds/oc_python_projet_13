@@ -1,32 +1,102 @@
 version: 2.1
 
 jobs:
-  build:
+  build_test:
     docker:
-      - image: bdls/django_lettings:8ae1d8a37777deb6f4264473894eca4144df4916
+      - image: python:3.11
     steps:
       - checkout
       - run:
+          name: Install dependencies
           command: |
             python -m venv .venv
             source .venv/bin/activate
             pip install -r requirements.txt
-  test:
-    docker:
-      - image: bdls/django_lettings:8ae1d8a37777deb6f4264473894eca4144df4916
-    steps:
-      - checkout
       - run:
+          name: Run tests
           command: |
-            python -m venv .venv
             source .venv/bin/activate
-            pip install -r requirements.txt
             pytest
 
+  containerize:
+    docker:
+      - image: docker:latest
+    steps:
+      - setup_remote_docker
+      - checkout
+      - run:
+          name: Build Docker image
+          command: |
+            echo $CIRCLE_SHA1
+            docker build --build-arg COMMIT_SHA=$CIRCLE_SHA1 -t oc_lettings:$CIRCLE_SHA1 .
+      - run:
+          name: Run Docker image
+          command: docker run -d -p 8000:8000 oc_lettings:$CIRCLE_SHA1
+      - run:
+          name: Push Docker image to DockerHub
+          command: |
+            docker login --username $DOCKERHUB_USERNAME --password $DOCKERHUB_PASSWORD
+            docker tag oc_lettings:$CIRCLE_SHA1 $DOCKERHUB_USERNAME/oc_lettings:$CIRCLE_SHA1
+            docker push $DOCKERHUB_USERNAME/oc_lettings:$CIRCLE_SHA1
+
+  deploy:
+    docker:
+      - image: cimg/python:3.10
+    environment:
+      - HEROKU_APP_NAME: oc-python-projet-13
+    steps:
+      - checkout
+      - run:
+          name: Install Heroku CLI
+          command: |
+            sudo curl https://cli-assets.heroku.com/install.sh | sh
+      - setup_remote_docker
+
+      - run:
+          name: Check if Heroku app exists
+          id: oc-python-projet-13
+          command: |
+            set -e
+            if heroku apps:info --app oc-python-projet-13 >/dev/null 2>&1; then
+              echo "::set-output name=app_exists::true"
+            else
+              echo "::set-output name=app_exists::false"
+            fi
+
+      - run: 
+          name: Create Heroku app if it doesn't exist
+          command: |
+            HEROKU_API_KEY=${HEROKU_API_KEY} heroku container:login
+            heroku apps:info -a oc-python-projet-13 || heroku create oc-python-projet-13
+            
+      - run:
+          name: Define secret key for Heroku
+          command: |
+            heroku config:set SECRET_KEY=$SECRET_KEY --app oc-python-projet-13
+
+      - run: 
+          name: Deploy to Heroku
+          command: |
+            docker login --username $DOCKERHUB_USERNAME --password $DOCKERHUB_PASSWORD
+            docker image pull $DOCKERHUB_USERNAME/oc_lettings:$CIRCLE_SHA1
+            HEROKU_API_KEY=${HEROKU_API_KEY} heroku container:login
+            docker tag $DOCKERHUB_USERNAME/oc_lettings:$CIRCLE_SHA1 registry.heroku.com/$HEROKU_APP_NAME/web
+            docker push registry.heroku.com/$HEROKU_APP_NAME/web
+            heroku container:release web --app $HEROKU_APP_NAME
+
 workflows:
-  build_and_test:
+  build_test_deploy:
     jobs:
-      - build
-      - test:
+      - build_test
+      - containerize:
           requires:
-            - build
+            - build_test
+          filters:
+            branches:
+              only: main
+      - deploy:
+          requires:
+            - containerize
+          filters:
+            branches:
+              only: main

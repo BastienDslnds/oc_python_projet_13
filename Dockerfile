@@ -6,7 +6,11 @@ FROM python:3.11 as python
 ENV PYTHONUNBUFFERED 1
 # On désire pas que python crée des fichiers *.pyc
 ENV PYTHONDONTWRITEBYTECODE 1
+# Définition du port
 ENV PORT=8000
+# Pour utiliser --build-arg SECRET_KEY
+ARG SECRET_KEY
+ENV SECRET_KEY=${SECRET_KEY}
 
 # Définition du répertoire de travail
 WORKDIR /app
@@ -18,8 +22,5 @@ RUN pip install --no-cache-dir -r requirements.txt
 
 # On copie tout le contenu du répertoire courant dans /app
 COPY . /app
-
-# collect static files
-RUN python manage.py collectstatic --noinput
 
 CMD python manage.py runserver 0.0.0.0:$PORT
